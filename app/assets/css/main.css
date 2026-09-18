@@ -1,0 +1,204 @@
+:root {
+  /* Цвет */
+  --c-navy: #16355B;
+  --c-navy-deep: #0F2540;
+  --c-blue: #1F5D90;
+  --c-gold: #C9A35E;
+  --c-gold-hover: #D9B879;
+  --c-gold-press: #BC9450;
+  --c-gold-light: #E4CA80;
+  --c-gold-text: #9A7526;
+  --c-cream: #F9F6F2;
+  --c-cream-border: #E6E0D8;
+  --c-surface: #F2F5F8;
+  --c-surface-border: #E1E8EF;
+  --c-white: #FFFFFF;
+  --c-text: #16355B;
+  --c-text-body: #223449;
+  --c-text-muted: #4A5B70;
+  --c-text-on-dark: #D9E3EF;
+  --c-border: #D8DFE8;
+  --c-border-strong: #B6C2D1;
+  --c-success: #1E7A4C;
+  --c-error: #C0392B;
+  --c-error-bg: #FCEEEC;
+
+  /* Типографика */
+  --font-serif: 'Source Serif 4', Georgia, serif;
+  --font-sans: 'Golos Text', system-ui, sans-serif;
+  --font-display: 'Raleway', system-ui, sans-serif;
+
+  /* Радиусы */
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-xl: 16px;
+  --r-pill: 999px;
+
+  /* Тени */
+  --shadow-sm: 0 1px 2px rgba(22, 53, 91, .08);
+  --shadow-md: 0 4px 16px rgba(22, 53, 91, .10);
+  --shadow-lg: 0 12px 32px rgba(22, 53, 91, .14);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Резерв под фиксированную нижнюю панель действий на мобильных, чтобы переход
+   по якорям (#form) и фокус на поле с ошибкой не прятали контент под панелью. */
+@media (max-width: 1023.98px) {
+  html {
+    scroll-padding-bottom: 90px;
+  }
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--c-white);
+  color: var(--c-text-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-family: var(--font-serif);
+  color: var(--c-text);
+}
+
+a {
+  color: var(--c-blue);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--c-navy);
+}
+
+button {
+  font-family: inherit;
+}
+
+.container {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* Плавное появление секций при открытии сайта — чистый CSS, без ожидания JS,
+   поэтому не прячет контент от поисковых роботов и пользователей без JS. */
+@media (prefers-reduced-motion: no-preference) {
+  .fade-in {
+    opacity: 1;
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  @starting-style {
+    .fade-in {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
+}
+
+/* Скелетон-заглушка для блоков, зависящих от сети (карта и т.п.), пока не подгрузился
+   реальный контент — держит нужное место и не выглядит «сломанной» пустотой. */
+.skeleton {
+  background: linear-gradient(90deg, var(--c-surface) 25%, var(--c-border) 37%, var(--c-surface) 63%);
+  background-size: 400% 100%;
+  animation: skeleton-shimmer 1.4s ease infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+    background: var(--c-surface);
+  }
+}
+@keyframes skeleton-shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Кнопки */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 52px;
+  padding: 0 20px;
+  border-radius: var(--r-md);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 16px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color .15s ease, border-color .15s ease, opacity .15s ease;
+}
+.btn-gold {
+  background: var(--c-gold);
+  color: var(--c-navy-deep);
+}
+.btn-gold:hover {
+  background: var(--c-gold-hover);
+  color: var(--c-navy-deep);
+}
+.btn-gold:active {
+  background: var(--c-gold-press);
+}
+.btn-outline-navy {
+  background: transparent;
+  border-color: var(--c-navy);
+  color: var(--c-navy);
+}
+.btn-outline-navy:hover {
+  background: rgba(22, 53, 91, .06);
+  color: var(--c-navy);
+}
+.btn-navy {
+  background: var(--c-navy);
+  color: var(--c-white);
+}
+.btn-navy:hover {
+  background: var(--c-navy-deep);
+  color: var(--c-white);
+}
+.btn-block {
+  width: 100%;
+}
+.btn:disabled {
+  cursor: not-allowed;
+}
+
+.section-label {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--c-gold-text);
+  margin-bottom: 12px;
+}
+
+/* Утилиты показа по брейкпоинту (desktop от 1024px) */
+.only-desktop {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1200px;
+    padding: 0 24px;
+  }
+  .only-desktop {
+    display: revert;
+  }
+  .only-mobile {
+    display: none;
+  }
+}
