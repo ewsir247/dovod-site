@@ -28,7 +28,9 @@
         </li>
       </ul>
 
-      <OfficeMap class="contacts__map" />
+      <div class="contacts__map">
+        <OfficeMap />
+      </div>
     </div>
   </section>
 </template>
@@ -64,7 +66,7 @@
   font-weight: 600;
 }
 .contacts__map {
-  margin: 0 16px;
+  padding: 0 16px;
 }
 
 @media (min-width: 1024px) {
@@ -86,7 +88,7 @@
     padding: 0;
   }
   .contacts__map {
-    margin: 0;
+    padding: 0;
   }
 }
 </style>
