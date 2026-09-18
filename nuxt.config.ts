@@ -9,6 +9,10 @@ export default defineNuxtConfig({
     '~/components',
   ],
   app: {
+    // На GitHub Pages сайт живёт по подпути /dovod-site/, а не в корне домена —
+    // без этого стили/скрипты и ссылки на страницы ломались бы. Локально (npm run dev/build)
+    // переменная не задана, поэтому там всё работает как раньше, от корня.
+    baseURL: process.env.NUXT_APP_BASE_URL || '/',
     head: {
       htmlAttrs: { lang: 'ru' },
       title: 'ДОВОД — юридическая помощь в Краснодаре',
