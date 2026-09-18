@@ -58,7 +58,7 @@ onBeforeUnmount(() => {
   padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
   background: var(--c-white);
   border-top: 1px solid var(--c-border);
-  max-width: 480px;
+  max-width: 360px;
   margin: 0 auto;
   transform: translateY(0);
   transition: transform .15s ease;
