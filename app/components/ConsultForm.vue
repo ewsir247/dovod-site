@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, ref, useId } from 'vue'
+import { computed, ref, useId } from 'vue'
 
 interface AttachedFile {
   name: string
@@ -96,10 +96,15 @@ function onPhoneInput(event: Event) {
   const formatted = formatPhone(target.value)
   phone.value = formatted
 
+  // Пишем в DOM синхронно, не дожидаясь реактивного ре-рендера Vue: при быстром
+  // вводе (в т.ч. когда браузер отклоняет буквы не сразу) следующая нажатая клавиша
+  // может прилететь раньше, чем :value="phone" обновит поле — тогда символ
+  // вставляется в старое (ещё не переформатированное) значение поля напрямую в DOM,
+  // и лишние буквы/цифры "просачиваются" в номер мимо formatPhone().
+  target.value = formatted
+
   const newCursor = cursorPositionForRestCount(formatted, restCount)
-  nextTick(() => {
-    target.setSelectionRange(newCursor, newCursor)
-  })
+  target.setSelectionRange(newCursor, newCursor)
 }
 
 function focusField(id: string) {
@@ -184,6 +189,7 @@ const submitLabel = computed(() => {
             type="tel"
             inputmode="numeric"
             autocomplete="tel"
+            maxlength="18"
             placeholder="+7 (___) ___-__-__"
             :value="phone"
             :class="{ 'field--error': phoneError }"
