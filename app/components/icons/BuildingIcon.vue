@@ -3,5 +3,6 @@ withDefaults(defineProps<{ size?: number }>(), { size: 24 })
 </script>
 
 <template>
-  <svg :width="size" :height="size" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="11" height="18" /><rect x="15" y="9" width="5" height="12" /><line x1="7" y1="7" x2="9" y2="7" /><line x1="7" y1="11" x2="9" y2="11" /><line x1="7" y1="15" x2="9" y2="15" /></svg>
+  <!-- lucide: building-2 -->
+  <svg :width="size" :height="size" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 12h4" /><path d="M10 8h4" /><path d="M14 21v-3a2 2 0 0 0-4 0v3" /><path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" /><path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" /></svg>
 </template>

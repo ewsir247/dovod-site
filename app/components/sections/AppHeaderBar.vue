@@ -189,9 +189,20 @@ onBeforeUnmount(() => {
   background: var(--c-white);
   color: var(--c-navy);
   cursor: pointer;
+  transition: border-color .15s ease, background-color .15s ease,
+              transform .15s cubic-bezier(.4,0,.2,1), box-shadow .2s cubic-bezier(.4,0,.2,1);
 }
 .icon-btn:hover {
   border-color: var(--c-border-strong);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+.icon-btn:active {
+  transform: translateY(0) scale(.96);
+}
+.icon-btn:focus-visible {
+  outline: 2px solid var(--c-gold);
+  outline-offset: 2px;
 }
 
 .mobile-menu__backdrop {

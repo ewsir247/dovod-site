@@ -116,6 +116,10 @@ button {
     animation: none;
     background: var(--c-surface);
   }
+  .btn,
+  .icon-btn {
+    transform: none !important;
+  }
 }
 @keyframes skeleton-shimmer {
   0% { background-position: 100% 50%; }
@@ -134,17 +138,32 @@ button {
   font-family: var(--font-sans);
   font-weight: 600;
   font-size: 16px;
+  letter-spacing: .01em;
   border: 1px solid transparent;
   cursor: pointer;
   text-decoration: none;
-  transition: background-color .15s ease, border-color .15s ease, opacity .15s ease;
+  box-shadow: var(--shadow-sm);
+  transition: background-color .15s ease, border-color .15s ease, opacity .15s ease,
+              transform .15s cubic-bezier(.4,0,.2,1), box-shadow .2s cubic-bezier(.4,0,.2,1);
+}
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+.btn:active {
+  transform: translateY(0) scale(.98);
+  box-shadow: var(--shadow-sm);
+}
+.btn:focus-visible {
+  outline: 2px solid var(--c-gold);
+  outline-offset: 2px;
 }
 .btn-gold {
-  background: var(--c-gold);
+  background: linear-gradient(135deg, var(--c-gold-light), var(--c-gold));
   color: var(--c-navy-deep);
 }
 .btn-gold:hover {
-  background: var(--c-gold-hover);
+  background: linear-gradient(135deg, var(--c-gold-light), var(--c-gold-hover));
   color: var(--c-navy-deep);
 }
 .btn-gold:active {
@@ -154,10 +173,13 @@ button {
   background: transparent;
   border-color: var(--c-navy);
   color: var(--c-navy);
+  box-shadow: none;
 }
 .btn-outline-navy:hover {
   background: rgba(22, 53, 91, .06);
+  border-color: var(--c-navy-deep);
   color: var(--c-navy);
+  box-shadow: var(--shadow-sm);
 }
 .btn-navy {
   background: var(--c-navy);
