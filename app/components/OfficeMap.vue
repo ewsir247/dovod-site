@@ -8,79 +8,34 @@ const props = withDefaults(defineProps<{ lon?: number; lat?: number; zoom?: numb
   label: 'Краснодар, ул. Дзержинского, 8/1',
 })
 
-const openMapUrl = `https://2gis.ru/search/${encodeURIComponent(props.label)}`
+// Google Maps embed без API-ключа: старый query-based режим (output=embed)
+// не требует ни ключа, ни биллинга, ни регистрации — в отличие от JS Maps API.
+const embedSrc = `https://maps.google.com/maps?q=${props.lat},${props.lon}&z=${props.zoom}&output=embed`
+const openMapUrl = `https://www.google.com/maps?q=${props.lat},${props.lon}`
 
-const mapContainer = ref<HTMLDivElement | null>(null)
 const loaded = ref(false)
 const timedOut = ref(false)
 
-// Если карта не подгрузилась за разумное время (медленный/нестабильный интернет,
-// либо зависший скрипт 2ГИС), показываем рабочую ссылку вместо вечного скелетона.
+// Если карта не подгрузилась за разумное время (медленный/нестабильный интернет),
+// показываем рабочую ссылку вместо вечного скелетона или «битой» рамки.
 const TIMEOUT_MS = 8000
 let timeoutId: ReturnType<typeof setTimeout> | undefined
 
-const MAPGL_SCRIPT_SRC = 'https://mapgl.2gis.com/api/js/v1'
-
-function loadMapglScript(): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const existing = document.querySelector<HTMLScriptElement>(`script[src="${MAPGL_SCRIPT_SRC}"]`)
-    if (existing) {
-      existing.addEventListener('load', () => resolve())
-      existing.addEventListener('error', () => reject(new Error('mapgl script failed to load')))
-      return
-    }
-    const script = document.createElement('script')
-    script.src = MAPGL_SCRIPT_SRC
-    script.async = true
-    script.onload = () => resolve()
-    script.onerror = () => reject(new Error('mapgl script failed to load'))
-    document.head.appendChild(script)
-  })
-}
-
-onMounted(async () => {
-  if (typeof window === 'undefined') return
-
-  const config = useRuntimeConfig()
-  const apiKey = config.public.dgisApiKey
-
-  // Без ключа карта заведомо не отрисуется — сразу показываем fallback-ссылку
-  // на 2ГИС, не тратя время на попытку загрузки скрипта.
-  if (!apiKey) {
-    timedOut.value = true
-    return
-  }
-
+onMounted(() => {
   timeoutId = setTimeout(() => {
     if (!loaded.value) timedOut.value = true
   }, TIMEOUT_MS)
-
-  try {
-    await loadMapglScript()
-    if (!mapContainer.value) return
-
-    // Типов пакета @2gis/mapgl в проекте нет (SDK грузится динамически с CDN,
-    // без npm-зависимости) — работаем с window.mapgl как с any.
-    const mapgl = (window as unknown as { mapgl: any }).mapgl
-    const map = new mapgl.Map(mapContainer.value, {
-      center: [props.lon, props.lat],
-      zoom: props.zoom,
-      key: apiKey,
-    })
-    // eslint-disable-next-line no-new
-    new mapgl.Marker(map, { coordinates: [props.lon, props.lat] })
-
-    loaded.value = true
-    timedOut.value = false
-    if (timeoutId) clearTimeout(timeoutId)
-  } catch {
-    timedOut.value = true
-  }
 })
 
 onBeforeUnmount(() => {
   if (timeoutId) clearTimeout(timeoutId)
 })
+
+function onFrameLoad() {
+  loaded.value = true
+  timedOut.value = false
+  if (timeoutId) clearTimeout(timeoutId)
+}
 </script>
 
 <template>
@@ -93,12 +48,15 @@ onBeforeUnmount(() => {
       <span>Карта долго грузится — открыть в новой вкладке →</span>
     </a>
 
-    <div
+    <iframe
       v-show="!timedOut"
-      ref="mapContainer"
       class="office-map__frame"
       :class="{ 'office-map__frame--visible': loaded }"
+      :src="embedSrc"
       :title="`Карта — ${label}`"
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+      @load="onFrameLoad"
     />
   </div>
 </template>

@@ -8,14 +8,6 @@ export default defineNuxtConfig({
     { path: '~/components/sections', pathPrefix: false },
     '~/components',
   ],
-  runtimeConfig: {
-    public: {
-      // Ключ 2ГИС MapGL для OfficeMap.vue — без него компонент красиво деградирует
-      // в fallback-ссылку на 2gis.ru. Задаётся через .env (NUXT_PUBLIC_DGIS_API_KEY)
-      // локально и через секрет DGIS_API_KEY в GitHub Actions.
-      dgisApiKey: process.env.NUXT_PUBLIC_DGIS_API_KEY || '',
-    },
-  },
   app: {
     // На GitHub Pages сайт живёт по подпути /dovod-site/, а не в корне домена —
     // без этого стили/скрипты и ссылки на страницы ломались бы. Локально (npm run dev/build)

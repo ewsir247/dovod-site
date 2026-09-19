@@ -29,7 +29,6 @@ jobs:
       - run: npm run generate
         env:
           NUXT_APP_BASE_URL: /dovod-site/
-          NUXT_PUBLIC_DGIS_API_KEY: ${{ secrets.DGIS_API_KEY }}
 
       - uses: actions/upload-pages-artifact@v3
         with:
