@@ -12,7 +12,7 @@ const quotes = [
     <div class="container">
       <p class="section-label">О компании</p>
       <h2 class="about__title">Кто мы и почему нам доверяют</h2>
-      <p class="about__text">Юридическая и экспертная компания в Краснодаре — работаем с 2014 года.</p>
+      <p class="about__text">Экспертная организация в Краснодаре — оценка, судебная экспертиза и юридическое сопровождение с 2014 года.</p>
 
       <div class="about__quotes">
         <blockquote v-for="quote in quotes" :key="quote.text" class="quote-card">

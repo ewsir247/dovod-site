@@ -7,7 +7,7 @@
       <div class="footer__top">
         <div class="footer__brand">
           <AppLogo :size="26" text-color="#FFFFFF" />
-          <p class="footer__tagline">Юридическая и экспертная компания в Краснодаре</p>
+          <p class="footer__tagline">Экспертная организация в Краснодаре</p>
         </div>
 
         <div class="footer__contacts">

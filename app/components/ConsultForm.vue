@@ -159,7 +159,7 @@ const submitLabel = computed(() => {
       <span class="success-card__icon"><CheckCircleIcon :size="56" /></span>
       <h3 class="success-card__title">Заявка принята</h3>
       <p class="success-card__text">
-        Юрист перезвонит на {{ submittedPhone }} в течение 15 минут.
+        Специалист перезвонит на {{ submittedPhone }} в течение 15 минут.
       </p>
       <a href="https://wa.me/79094661166" target="_blank" rel="noopener" class="btn btn-navy btn-block">
         Написать в WhatsApp

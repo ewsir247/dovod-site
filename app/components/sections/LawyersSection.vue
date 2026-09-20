@@ -9,7 +9,7 @@ const lawyers = [
 <template>
   <section class="lawyers">
     <div class="container">
-      <h2 class="lawyers__title">Наши юристы</h2>
+      <h2 class="lawyers__title">Наша команда</h2>
 
       <ul class="lawyers__list">
         <li v-for="lawyer in lawyers" :key="lawyer.name">

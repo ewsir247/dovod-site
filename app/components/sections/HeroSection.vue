@@ -5,9 +5,9 @@
   <section class="hero">
     <div class="container hero__inner">
       <div class="hero__left">
-        <span class="hero__badge only-desktop">Юридическая и экспертная компания · Краснодар</span>
-        <h1 class="hero__title">Юридическая и экспертная помощь в Краснодаре</h1>
-        <p class="hero__subtitle">Гражданские, семейные и арбитражные дела, независимая оценка и судебная экспертиза с 2014 года.</p>
+        <span class="hero__badge only-desktop">Экспертная организация · Краснодар</span>
+        <h1 class="hero__title">Независимая экспертиза и оценка в Краснодаре</h1>
+        <p class="hero__subtitle">Судебная и досудебная экспертиза, оценка, рецензирование, юридическое сопровождение — с 2014 года.</p>
 
         <div class="hero__actions">
           <a href="#form" class="btn btn-gold btn-block">Получить консультацию</a>
