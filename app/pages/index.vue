@@ -8,7 +8,12 @@
       <HeroSection />
       <DirectionsSection />
       <StatsSection />
+      <EstimateSection />
+      <ExpertiseSection />
+      <LegalServicesSection />
+      <ReviewingSection />
       <LawyersSection />
+      <AboutSection />
       <ReviewsSection />
       <div id="contact" class="contact-block">
         <ContactsSection />

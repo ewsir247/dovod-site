@@ -1,11 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, useId } from 'vue'
 
-interface AttachedFile {
-  name: string
-  sizeLabel: string
-}
-
 type FormStatus = 'idle' | 'submitting' | 'success'
 
 const props = withDefaults(defineProps<{ variant?: 'full' | 'hero' }>(), {
@@ -25,9 +20,9 @@ const name = ref('')
 const phone = ref('')
 const message = ref('')
 const agree = ref(false)
-const attachedFiles = ref<AttachedFile[]>([])
 
 const status = ref<FormStatus>('idle')
+const submitError = ref('')
 const attemptedSubmit = ref(false)
 
 const phoneError = computed(() => attemptedSubmit.value && phone.value.trim() === '')
@@ -112,23 +107,37 @@ function focusField(id: string) {
   el?.focus()
 }
 
-function attachFile() {
-  if (attachedFiles.value.length >= 5) return
-  attachedFiles.value.push({ name: 'Акт о заливе квартиры.pdf', sizeLabel: '1,8 МБ' })
-}
-
-function removeFile(index: number) {
-  attachedFiles.value.splice(index, 1)
-}
-
-function handleSubmit() {
+async function handleSubmit() {
   attemptedSubmit.value = true
   if (hasErrors.value) return
 
   status.value = 'submitting'
-  setTimeout(() => {
-    status.value = 'success'
-  }, 1200)
+  submitError.value = ''
+
+  try {
+    const resp = await fetch('https://legal-service-nuxt.pages.dev/api/callback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: name.value,
+        phone: phone.value,
+        comment: message.value,
+        page: typeof window !== 'undefined' ? window.location.href : '',
+      }),
+    })
+    let result: Record<string, unknown> = {}
+    try { result = await resp.json() } catch { /* non-JSON */ }
+
+    if (resp.ok && result.ok) {
+      status.value = 'success'
+    } else {
+      status.value = 'idle'
+      submitError.value = typeof result.error === 'string' ? result.error : 'Не удалось отправить заявку.'
+    }
+  } catch {
+    status.value = 'idle'
+    submitError.value = 'Нет связи с сервером.'
+  }
 }
 
 const submittedPhone = computed(() => phone.value || '+7 (909) 466-11-66')
@@ -212,30 +221,6 @@ const submitLabel = computed(() => {
         />
       </div>
 
-      <div v-if="!isHero" class="field">
-        <button v-if="attachedFiles.length < 5" type="button" class="attach-btn" @click="attachFile">
-          <PaperclipIcon :size="20" />
-          <span class="attach-btn__text">
-            <strong>Прикрепить документ или фото</strong>
-            <small>PDF, JPG, PNG до 20 МБ</small>
-          </span>
-        </button>
-
-        <ul v-if="attachedFiles.length" class="attached-list">
-          <li v-for="(file, index) in attachedFiles" :key="file.name + index" class="attached-file">
-            <FileIcon :size="20" />
-            <span class="attached-file__info">
-              <span class="attached-file__name">{{ file.name }}</span>
-              <span class="attached-file__size">{{ file.sizeLabel }}</span>
-            </span>
-            <button type="button" class="attached-file__remove" aria-label="Удалить файл" @click="removeFile(index)">
-              <CloseIcon :size="14" />
-            </button>
-          </li>
-        </ul>
-        <p class="field-hint">Можно приложить до 5 файлов, каждый до 20 МБ</p>
-      </div>
-
       <div class="field">
         <label class="checkbox" :class="{ 'checkbox--error': agreeError }">
           <input :id="agreeFieldId" v-model="agree" type="checkbox">
@@ -260,6 +245,18 @@ const submitLabel = computed(() => {
         <SpinnerIcon v-if="status === 'submitting'" :size="18" />
         <span>{{ submitLabel }}</span>
       </button>
+
+      <div v-if="submitError" class="alert alert--submit">
+        <span class="alert__icon"><WarningIcon :size="20" /></span>
+        <div class="alert__body">
+          <p class="alert__title">{{ submitError }}</p>
+          <p class="alert__fallback-text">Позвоните нам или напишите напрямую:</p>
+          <div class="alert__fallback-links">
+            <a href="https://wa.me/79094661166" target="_blank" rel="noopener">Написать в WhatsApp</a>
+            <a href="https://max.ru/" target="_blank" rel="noopener">Написать в MAX</a>
+          </div>
+        </div>
+      </div>
     </form>
   </div>
 </template>
@@ -376,82 +373,24 @@ const submitLabel = computed(() => {
   color: var(--c-text-muted);
 }
 
-.attach-btn {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  padding: 14px 16px;
-  border-radius: var(--r-md);
-  border: 1.5px dashed var(--c-border-strong);
-  background: var(--c-surface);
-  color: var(--c-navy);
-  cursor: pointer;
-  text-align: left;
+.alert--submit {
+  margin-top: -4px;
 }
-.attach-btn__text {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+.alert__fallback-text {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: var(--c-error);
 }
-.attach-btn__text strong {
-  font-size: 15px;
+.alert__fallback-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+}
+.alert__fallback-links a {
+  font-size: 13px;
   font-weight: 600;
-}
-.attach-btn__text small {
-  font-size: 12px;
-  color: var(--c-text-muted);
-}
-
-.attached-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.attached-file {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: var(--r-md);
-  border: 1px solid var(--c-border);
-  background: var(--c-white);
-  color: var(--c-navy);
-}
-.attached-file__info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-.attached-file__name {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--c-text);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.attached-file__size {
-  font-size: 12px;
-  color: var(--c-text-muted);
-}
-.attached-file__remove {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: none;
-  background: var(--c-surface);
-  color: var(--c-text-muted);
-  cursor: pointer;
+  color: var(--c-error);
+  text-decoration: underline;
 }
 
 .checkbox {

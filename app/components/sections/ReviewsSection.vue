@@ -210,7 +210,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <section class="reviews">
+  <section id="reviews" class="reviews">
     <div class="container">
       <h2 class="reviews__title">Отзывы</h2>
 

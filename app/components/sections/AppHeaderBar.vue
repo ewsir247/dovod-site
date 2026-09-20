@@ -65,7 +65,11 @@ onBeforeUnmount(() => {
       <AppLogo :size="38" class="header__logo header__logo--desktop" />
 
       <nav class="header__nav" aria-label="Основное меню">
-        <a href="#services">Услуги</a>
+        <a href="#estimate">Оценка</a>
+        <a href="#expertise">Экспертиза</a>
+        <a href="#legal-services">Юр. услуги</a>
+        <a href="#reviewing">Рецензирование</a>
+        <a href="#about">О компании</a>
         <a href="#contact">Контакты</a>
       </nav>
 
@@ -116,7 +120,11 @@ onBeforeUnmount(() => {
       </div>
 
       <div class="mobile-menu__links">
-        <a href="#services" @click="closeMenu">Услуги</a>
+        <a href="#estimate" @click="closeMenu">Оценка</a>
+        <a href="#expertise" @click="closeMenu">Экспертиза</a>
+        <a href="#legal-services" @click="closeMenu">Юр. услуги</a>
+        <a href="#reviewing" @click="closeMenu">Рецензирование</a>
+        <a href="#about" @click="closeMenu">О компании</a>
         <a href="#contact" @click="closeMenu">Контакты</a>
       </div>
 
@@ -332,26 +340,49 @@ onBeforeUnmount(() => {
     color: var(--c-white);
   }
 
+  /* .container ограничен max-width:1200px на ЛЮБОЙ ширине экрана ≥1024px (в main.css нет
+     более широкого брейкпоинта для .container) — то есть у шапки никогда не будет больше
+     ~1152px полезной ширины, сколько бы ни расширялся вьюпорт. С 6 пунктами меню + лого +
+     телефон + кнопка CTA это не умещается в одну строку ни при 1280px, ни при 1920px —
+     поэтому шапка на всех десктопных ширинах двухстрочная: логотип и телефон/CTA в первой
+     строке, меню — центрированной второй строкой во всю ширину. Это гарантированно не даёт
+     тексту наслаиваться ни на одной ширине от 1024 до 1920px. position: sticky на .header
+     работает и с auto-высотой. */
   .header {
-    height: 88px;
+    height: auto;
   }
   .header__inner {
-    padding: 0 24px;
+    flex-wrap: wrap;
+    row-gap: 10px;
+    padding: 14px 24px;
   }
   .header__logo--mobile {
     display: none;
   }
   .header__logo--desktop {
     display: flex;
+    order: 1;
+  }
+  .header__desktop-actions {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    order: 2;
   }
   .header__nav {
     display: flex;
     align-items: center;
-    gap: 32px;
+    justify-content: center;
+    flex: 1 1 100%;
+    order: 3;
+    gap: 20px;
+    padding-top: 10px;
+    border-top: 1px solid var(--c-border);
   }
   .header__nav a {
     font-weight: 600;
-    font-size: 15px;
+    font-size: 14px;
+    white-space: nowrap;
     color: var(--c-navy);
   }
   .header__nav a:hover {
@@ -360,11 +391,6 @@ onBeforeUnmount(() => {
   .header__actions {
     display: none;
   }
-  .header__desktop-actions {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-  }
   .header__phone {
     font-weight: 700;
     font-size: 22px;
@@ -372,6 +398,17 @@ onBeforeUnmount(() => {
   }
   .header__phone:hover {
     color: var(--c-blue);
+  }
+}
+
+/* От 1280px чуть просторнее: крупнее шрифт и отступы между пунктами меню — но по-прежнему
+   двухстрочная шапка (см. пояснение выше про фиксированный max-width:1200px контейнера). */
+@media (min-width: 1280px) {
+  .header__nav {
+    gap: 32px;
+  }
+  .header__nav a {
+    font-size: 15px;
   }
 }
 </style>
